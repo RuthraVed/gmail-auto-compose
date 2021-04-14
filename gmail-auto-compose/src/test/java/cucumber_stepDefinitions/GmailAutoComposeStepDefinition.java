@@ -1,29 +1,21 @@
 package cucumber_stepDefinitions;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.chrome.*;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
+import io.cucumber.java.*;
+import io.cucumber.java.en.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import pages.GmailHomepage;
 
 public class GmailAutoComposeStepDefinition {
 
+	private GmailHomepage hmPg;
 	private WebDriver driver;
 	private Properties properties = new Properties();
-	
 	
 	@Before
 	public void setUp(){
@@ -52,7 +44,7 @@ public class GmailAutoComposeStepDefinition {
 	@After
 	public void tearDown(){
 		try {
-			Thread.sleep(6000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -62,66 +54,37 @@ public class GmailAutoComposeStepDefinition {
 	@Given("user is already logged-in and on Gmail homepage")
 	public void user_is_already_logged_in_and_on_gmail_homepage(){
 
-		driver.get("https://mail.google.com/");		
+		driver.get("https://mail.google.com/");
+		hmPg = new GmailHomepage(driver);
 	}
 
 	@When("user clicks on the compose button")
 	public void user_clicks_on_the_compose_button(){
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		driver.findElement(By.xpath("//div[@role='button' and text()='Compose']")).click();
-		
+
+		hmPg.composeButtonClick();
 	}
 
 	@And("user gives the recipients email address")
 	public void user_gives_the_recipients_email_address(){
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		driver.findElement(By.name("to")).sendKeys(properties.getProperty("email.recipient"));
-		
+		hmPg.toEmailTexboxInput(properties.getProperty("email.recipient"));
+
 	}
 
 	@And("user gives the subject of email")
 	public void user_gives_the_subject_of_email(){
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		driver.findElement(By.name("subjectbox")).sendKeys(properties.getProperty("email.subject"));
-		
+		hmPg.subjectTexboxInput(properties.getProperty("email.subject"));
+
 	}
 
 	@And("user writes in the body of email")
 	public void user_writes_in_the_body_of_email(){
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		driver.findElement(By.xpath("//div[@aria-label='Message Body']")).sendKeys(properties.getProperty("email.body"));
+		hmPg.bodyTexboxInput(properties.getProperty("email.body"));
 
 	}
 
 	@Then("user clicks the send button")
 	public void user_clicks_the_send_button(){
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		driver.findElement(By.xpath("//div[@role='button' and text()='Send']")).click();
+		hmPg.sendButtonClick();
 		
 	}
 
